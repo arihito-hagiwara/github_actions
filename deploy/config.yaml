@@ -1,0 +1,7 @@
+# ecspresso configuration file
+# This is a placeholder configuration. Update with your actual ECS cluster and service details.
+
+region: ap-northeast-1  # Change to your AWS region
+cluster: your-cluster-name  # Change to your ECS cluster name
+service: your-service-name  # Change to your ECS service name
+task_definition: ecs-task-def.json
