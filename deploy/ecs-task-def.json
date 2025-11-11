@@ -1,0 +1,28 @@
+{
+  "family": "k6-load-test",
+  "networkMode": "awsvpc",
+  "requiresCompatibilities": ["FARGATE"],
+  "cpu": "256",
+  "memory": "512",
+  "containerDefinitions": [
+    {
+      "name": "k6-container",
+      "image": "<ECR_REPOSITORY_URI>:latest",
+      "essential": true,
+      "logConfiguration": {
+        "logDriver": "awslogs",
+        "options": {
+          "awslogs-group": "/ecs/k6-load-test",
+          "awslogs-region": "ap-northeast-1",
+          "awslogs-stream-prefix": "ecs"
+        }
+      },
+      "environment": [
+        {
+          "name": "K6_STATSD_ENABLE_TAGS",
+          "value": "true"
+        }
+      ]
+    }
+  ]
+}
