@@ -26,8 +26,9 @@ DockerイメージをAWS ECRに自動的にビルドしてプッシュするGitH
 このワークフローを使用するには、GitHubリポジトリの設定（Settings → Secrets and variables → Actions）で以下のシークレットを設定してください：
 
 - `ASSUME_ROLE_ARN_STAGING`: ECRプッシュ権限を持つAWSロールのARN
-- `AWS_REGION`: ECRリポジトリが配置されているAWSリージョン（例：`us-east-1`）
 - `ECR_REPOSITORY_NAME`: ECRリポジトリの名前
+
+**注意**: AWSリージョンは`ap-northeast-1`（東京リージョン）に固定されています。
 
 ### 手動実行
 
