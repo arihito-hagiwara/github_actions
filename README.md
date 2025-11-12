@@ -25,8 +25,7 @@ DockerイメージをAWS ECRに自動的にビルドしてプッシュするGitH
 
 このワークフローを使用するには、GitHubリポジトリの設定（Settings → Secrets and variables → Actions）で以下のシークレットを設定してください：
 
-- `AWS_ACCESS_KEY_ID`: ECRプッシュ権限を持つAWSアクセスキーID
-- `AWS_SECRET_ACCESS_KEY`: AWSシークレットアクセスキー
+- `ASSUME_ROLE_ARN_STAGING`: ECRプッシュ権限を持つAWSロールのARN
 - `AWS_REGION`: ECRリポジトリが配置されているAWSリージョン（例：`us-east-1`）
 - `ECR_REPOSITORY_NAME`: ECRリポジトリの名前
 
@@ -93,7 +92,7 @@ DockerイメージをAWS ECRに自動的にビルドしてプッシュするGitH
    - ECSクラスターとサービス情報で`deploy/config.yaml`を更新します
    - タスク定義で`deploy/ecs-task-def.json`を更新します
 
-2. AWS認証情報が以下の権限を持っていることを確認します：
+2. AWSロール（`ASSUME_ROLE_ARN_STAGING`で指定）が以下の権限を持っていることを確認します：
    - `hagiwara-k6-test-bucket`へのS3アップロード
    - ECSタスクの実行
    - ECRイメージのプル
