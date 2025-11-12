@@ -40,11 +40,9 @@ jobs:
           echo "File uploaded successfully as scenario.js"
 
       - name: Install ecspresso
-        run: |
-          ECSPRESSO_VERSION="v2.4.3"
-          curl -sL https://github.com/kayac/ecspresso/releases/download/${ECSPRESSO_VERSION}/ecspresso_${ECSPRESSO_VERSION}_linux_amd64.tar.gz | tar xz
-          sudo mv ecspresso /usr/local/bin/
-          ecspresso version
+        uses: kayac/ecspresso@v2
+        with:
+          version: v2.4.3
 
       - name: Run ECS task with ecspresso
         env:
