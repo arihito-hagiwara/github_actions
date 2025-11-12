@@ -49,4 +49,4 @@ jobs:
         run: |
           cd deploy
           echo "Running ECS task with count: ${TASK_COUNT}"
-          ecspresso run --config config.yaml --tasks ${TASK_COUNT}
+          ecspresso run --config config.yaml --tasks ${TASK_COUNT} --no-wait
