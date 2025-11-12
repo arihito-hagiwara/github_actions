@@ -10,9 +10,9 @@ on:
         type: string
       task_count:
         description: 'Number of tasks for ECS run task'
-        required: false
-        default: '1'
-        type: string
+        required: true
+        default: 1
+        type: number
 
 jobs:
   run-k6-test:
