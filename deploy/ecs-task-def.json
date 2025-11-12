@@ -1,28 +1,53 @@
 {
-  "family": "k6-load-test",
-  "networkMode": "awsvpc",
-  "requiresCompatibilities": ["FARGATE"],
-  "cpu": "256",
-  "memory": "512",
   "containerDefinitions": [
     {
-      "name": "k6-container",
-      "image": "<ECR_REPOSITORY_URI>:latest",
+      "cpu": 0,
+      "dockerLabels": {},
       "essential": true,
+      "image": "229006280112.dkr.ecr.ap-northeast-1.amazonaws.com/k6-fargate-cloudwatch-customk639e6bd28-sb2bq7wc1f6a:latest",
       "logConfiguration": {
         "logDriver": "awslogs",
         "options": {
-          "awslogs-group": "/ecs/k6-load-test",
+          "awslogs-group": "k6-logs",
           "awslogs-region": "ap-northeast-1",
-          "awslogs-stream-prefix": "ecs"
+          "awslogs-stream-prefix": "k6-fargate-cloudwatch-K6Cluster0D119836-9iEp18KLGiLA"
         }
       },
-      "environment": [
-        {
-          "name": "K6_STATSD_ENABLE_TAGS",
-          "value": "true"
+      "name": "k6",
+      "versionConsistency": ""
+    },
+    {
+      "cpu": 0,
+      "dockerLabels": {},
+      "essential": true,
+      "image": "amazon/cloudwatch-agent:latest",
+      "logConfiguration": {
+        "logDriver": "awslogs",
+        "options": {
+          "awslogs-group": "k6-fargate-cloudwatch-K6TaskcloudwatchagentLogGroup359DE4DE-pACG2Om0PY5P",
+          "awslogs-region": "ap-northeast-1",
+          "awslogs-stream-prefix": "k6-fargate-cloudwatch-K6Cluster0D119836-9iEp18KLGiLA"
         }
-      ]
+      },
+      "name": "cloudwatch-agent",
+      "secrets": [
+        {
+          "name": "CW_CONFIG_CONTENT",
+          "valueFrom": "arn:aws:ssm:ap-northeast-1:229006280112:parameter/ecs-cwagent-sidecar-fargate"
+        }
+      ],
+      "versionConsistency": ""
     }
-  ]
+  ],
+  "cpu": "4096",
+  "executionRoleArn": "arn:aws:iam::229006280112:role/k6-fargate-cloudwatch-ecsTaskExecutionRole34F54B99-iIWBqtgbvTB6",
+  "family": "k6fargatecloudwatchK6Task84B59274",
+  "ipcMode": "",
+  "memory": "8192",
+  "networkMode": "awsvpc",
+  "pidMode": "",
+  "requiresCompatibilities": [
+    "FARGATE"
+  ],
+  "taskRoleArn": "arn:aws:iam::229006280112:role/k6-fargate-cloudwatch-K6TaskTaskRole2FCB7788-S0kNQ2N5kjgm"
 }
