@@ -1,101 +1,101 @@
 # github_actions
 
-This repository contains a Docker image for k6 load testing with AWS S3 integration and GitHub Actions workflows for building and running load tests.
+このリポジトリには、AWS S3統合を備えたk6負荷テスト用のDockerイメージと、ビルドおよび負荷テスト実行のためのGitHub Actionsワークフローが含まれています。
 
-## GitHub Actions Workflows
+## GitHub Actionsワークフロー
 
-This repository includes two GitHub Actions workflows:
+このリポジトリには2つのGitHub Actionsワークフローが含まれています：
 
-1. **Build and Push Docker Image to AWS ECR** - Automatically builds and pushes the k6 Docker image
-2. **Run K6 Load Test** - Manually triggers k6 load tests with ECS tasks
+1. **DockerイメージのビルドとAWS ECRへのプッシュ** - k6 Dockerイメージを自動的にビルドしてプッシュします
+2. **K6負荷テストの実行** - ECSタスクを使用してk6負荷テストを手動でトリガーします
 
-### 1. Build and Push Docker Image to AWS ECR
+### 1. DockerイメージのビルドとAWS ECRへのプッシュ
 
-A GitHub Actions workflow is configured to automatically build and push the Docker image to AWS ECR.
+DockerイメージをAWS ECRに自動的にビルドしてプッシュするGitHub Actionsワークフローが設定されています。
 
-### Workflow Triggers
+### ワークフローのトリガー
 
-The workflow runs when:
-- Changes are pushed to the `main` branch that affect:
+ワークフローは以下の場合に実行されます：
+- `main`ブランチに以下のファイルに影響を与える変更がプッシュされた場合：
   - `Dockerfile`
   - `entrypoint.sh`
-- Manual workflow dispatch (can be triggered manually from the GitHub Actions tab)
+- 手動ワークフローディスパッチ（GitHub Actionsタブから手動でトリガー可能）
 
-### Required Secrets
+### 必要なシークレット
 
-To use this workflow, configure the following secrets in your GitHub repository settings (Settings → Secrets and variables → Actions):
+このワークフローを使用するには、GitHubリポジトリの設定（Settings → Secrets and variables → Actions）で以下のシークレットを設定してください：
 
-- `AWS_ACCESS_KEY_ID`: AWS access key ID with ECR push permissions
-- `AWS_SECRET_ACCESS_KEY`: AWS secret access key
-- `AWS_REGION`: AWS region where your ECR repository is located (e.g., `us-east-1`)
-- `ECR_REPOSITORY_NAME`: Name of your ECR repository
+- `AWS_ACCESS_KEY_ID`: ECRプッシュ権限を持つAWSアクセスキーID
+- `AWS_SECRET_ACCESS_KEY`: AWSシークレットアクセスキー
+- `AWS_REGION`: ECRリポジトリが配置されているAWSリージョン（例：`us-east-1`）
+- `ECR_REPOSITORY_NAME`: ECRリポジトリの名前
 
-### Manual Execution
+### 手動実行
 
-To manually trigger the workflow:
-1. Go to the "Actions" tab in your GitHub repository
-2. Select "Build and Push Docker Image to AWS ECR" workflow
-3. Click "Run workflow"
-4. Select the branch and click "Run workflow"
+ワークフローを手動でトリガーするには：
+1. GitHubリポジトリの「Actions」タブに移動します
+2. 「Build and Push Docker Image to AWS ECR」ワークフローを選択します
+3. 「Run workflow」をクリックします
+4. ブランチを選択して「Run workflow」をクリックします
 
-### Workflow Details
+### ワークフローの詳細
 
-The workflow performs the following steps:
-1. Checks out the code
-2. Configures AWS credentials
-3. Logs in to Amazon ECR
-4. Builds the Docker image
-5. Tags the image with both the commit SHA and `latest`
-6. Pushes both tags to ECR
+ワークフローは以下のステップを実行します：
+1. コードをチェックアウトします
+2. AWS認証情報を設定します
+3. Amazon ECRにログインします
+4. Dockerイメージをビルドします
+5. コミットSHAと`latest`の両方でイメージにタグを付けます
+6. 両方のタグをECRにプッシュします
 
-### 2. Run K6 Load Test
+### 2. K6負荷テストの実行
 
-This workflow allows you to manually trigger k6 load tests using AWS ECS tasks via ecspresso.
+このワークフローでは、ecspressoを使用してAWS ECSタスクでk6負荷テストを手動でトリガーできます。
 
-#### Workflow Triggers
+#### ワークフローのトリガー
 
-This workflow can only be triggered manually using workflow_dispatch.
+このワークフローはworkflow_dispatchを使用して手動でのみトリガーできます。
 
-#### Input Parameters
+#### 入力パラメータ
 
-- `scenario_file_name` (optional): Name of the scenario file from the `scenario/` directory (e.g., `scenario.js`). If left empty, the S3 upload step is skipped.
-  - Default: empty string
-- `task_count` (optional): Number of ECS tasks to run concurrently for the load test
-  - Default: `1`
+- `scenario_file_name`（オプション）：`scenario/`ディレクトリからのシナリオファイル名（例：`scenario.js`）。空のままにするとS3アップロードステップはスキップされます。
+  - デフォルト：空文字列
+- `task_count`（オプション）：負荷テストのために同時に実行するECSタスクの数
+  - デフォルト：`1`
 
-#### Manual Execution
+#### 手動実行
 
-To manually trigger the workflow:
-1. Go to the "Actions" tab in your GitHub repository
-2. Select "Run K6 Load Test" workflow
-3. Click "Run workflow"
-4. Fill in the input parameters:
-   - Enter scenario file name (or leave empty to skip S3 upload)
-   - Enter task count (default is 1)
-5. Click "Run workflow"
+ワークフローを手動でトリガーするには：
+1. GitHubリポジトリの「Actions」タブに移動します
+2. 「Run K6 Load Test」ワークフローを選択します
+3. 「Run workflow」をクリックします
+4. 入力パラメータを入力します：
+   - シナリオファイル名を入力します（またはS3アップロードをスキップするには空のままにします）
+   - タスク数を入力します（デフォルトは1）
+5. 「Run workflow」をクリックします
 
-#### Workflow Details
+#### ワークフローの詳細
 
-The workflow performs the following steps:
-1. Checks out the code
-2. Configures AWS credentials
-3. **Uploads scenario file to S3** (conditional):
-   - If `scenario_file_name` is provided, uploads the file from `scenario/` directory to `s3://hagiwara-k6-test-bucket/k6/scenario.js`
-   - Skips this step if `scenario_file_name` is empty
-4. Installs ecspresso tool
-5. Runs ECS task using ecspresso with the specified task count
+ワークフローは以下のステップを実行します：
+1. コードをチェックアウトします
+2. AWS認証情報を設定します
+3. **シナリオファイルをS3にアップロード**（条件付き）：
+   - `scenario_file_name`が指定されている場合、`scenario/`ディレクトリからファイルを`s3://hagiwara-k6-test-bucket/k6/scenario.js`にアップロードします
+   - `scenario_file_name`が空の場合、このステップをスキップします
+4. ecspressoツールをインストールします
+5. 指定されたタスク数でecspressoを使用してECSタスクを実行します
 
-#### Configuration
+#### 設定
 
-Before using this workflow, you need to:
+このワークフローを使用する前に、以下を行う必要があります：
 
-1. Configure the ecspresso settings in the `deploy/` directory:
-   - Update `deploy/config.yaml` with your ECS cluster and service information
-   - Update `deploy/ecs-task-def.json` with your task definition
+1. `deploy/`ディレクトリでecspresso設定を構成します：
+   - ECSクラスターとサービス情報で`deploy/config.yaml`を更新します
+   - タスク定義で`deploy/ecs-task-def.json`を更新します
 
-2. Ensure AWS credentials have permissions for:
-   - S3 upload to `hagiwara-k6-test-bucket`
-   - ECS task execution
-   - ECR image pull
+2. AWS認証情報が以下の権限を持っていることを確認します：
+   - `hagiwara-k6-test-bucket`へのS3アップロード
+   - ECSタスクの実行
+   - ECRイメージのプル
 
-See the `deploy/README.md` for detailed configuration instructions.
+詳細な設定手順については、`deploy/README.md`を参照してください。
