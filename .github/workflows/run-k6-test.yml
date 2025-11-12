@@ -29,7 +29,7 @@ jobs:
         uses: aws-actions/configure-aws-credentials@v4
         with:
           role-to-assume: ${{ secrets.ASSUME_ROLE_ARN_STAGING }}
-          aws-region: ${{ secrets.AWS_REGION }}
+          aws-region: ap-northeast-1
 
       - name: Upload scenario file to S3
         if: ${{ inputs.scenario_file_name != '' }}
